@@ -61,6 +61,22 @@ class CyberPathDB:
         self.cursor.close()
         self.conn.close()
 
+    def insert_alert(self, ip, asset, payload, tid, score, tech_name, tactic, mitigations, data_sources):
+        query = """
+            INSERT INTO active_alerts 
+            (source_ip, target_asset, raw_payload, mitre_tid, risk_score, tech_name, tactic, mitigations, data_sources) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        try:
+            # On aligne scrupuleusement le tuple avec les colonnes de la requête
+            values = (ip, asset, payload, tid, score, tech_name, tactic, mitigations, data_sources)
+            self.cursor.execute(query, values)
+            self.conn.commit()
+        except Exception as e:
+            # Important : faire un rollback en cas d'erreur pour ne pas bloquer la transaction suivante
+            self.conn.rollback()
+            print(f"[DB ERROR] Erreur d'insertion : {e}")
+            
 # --- EXEMPLE D'UTILISATION ---
 if __name__ == "__main__":
     db = CyberPathDB()
