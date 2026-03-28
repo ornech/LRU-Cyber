@@ -91,3 +91,47 @@ avec validation exhaustive au constructeur :
 
 Toute instance d'`ArchivedProfile` est valide par construction et directement
 consommable par les composants aval, sans ajouter de logique hors périmètre.
+
+## D-003 — Table versionnée de criticité d1 (issue #4)
+
+**Date :** 2026-03-28
+**Statut :** acceptée
+
+### Contexte
+
+La dimension `d1` (criticité) est définie dans la documentation, mais la table
+de pondération n'était pas versionnée dans un artefact de données dédié.
+L'issue #4 demande un livrable strictement documentaire/data, sans implémentation
+runtime, sans logique de matching, et sans logique MITRE.
+
+### Décision
+
+Adopter une première table versionnée dans
+`references/criticality/criticality_weights.v1.yaml` avec les propriétés
+suivantes :
+
+- poids bornés dans `[0,1]` pour toutes les catégories ;
+- justification technique explicite obligatoire pour chaque entrée ;
+- exemples de ressources obligatoires pour chaque catégorie ;
+- catégorie de repli explicite (`fallback`) ;
+- règles de revue et de versionnement documentées dans
+  `references/criticality/README.md`.
+
+La version `v1` est marquée `provisional` pour signaler qu'elle constitue une
+base initiale de référence documentaire et qu'elle pourra être révisée via une
+nouvelle version de fichier.
+
+### Alternatives rejetées
+
+- Introduire une logique de chargement runtime : rejeté (hors périmètre issue #4).
+- Modifier des contrats, du code `src/` ou des tests : rejeté (hors périmètre).
+- Coupler cette table à des règles MITRE, DTW, matching ou alerting : rejeté
+  pour conserver une séparation claire des responsabilités.
+
+### Conséquences
+
+- La criticité `d1` dispose d'un référentiel de données explicite et versionné.
+- Les révisions futures devront créer `criticality_weights.vN.yaml` sans
+  réécriture silencieuse de `v1`.
+- Les évolutions d'implémentation éventuelles resteront traitées dans une issue
+  distincte.

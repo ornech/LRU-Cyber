@@ -1,0 +1,68 @@
+table_id: criticality_weights
+version: v1
+status: provisional
+scope: d1_criticality
+owner: cyber-vpt
+created_at: "2026-03-28"
+review_policy:
+  review_due: "2026-06-30"
+  trigger_events:
+    - architecture_change
+    - new_resource_family
+    - repeated_false_positive_or_false_negative
+rules:
+  weight_range:
+    min: 0.0
+    max: 1.0
+  fallback:
+    category_id: public_low_impact
+    reason: "Used when no explicit category matches the observed resource."
+categories:
+  - category_id: public_low_impact
+    label: Public or low-impact surface
+    weight: 0.10
+    justification: "Static assets and public informational endpoints have low direct operational impact."
+    examples:
+      - /assets/logo.png
+      - /public/help
+      - /healthz
+  - category_id: user_workspace
+    label: User workspace and routine documents
+    weight: 0.30
+    justification: "User-level work areas matter for continuity but are less critical than control-plane or secret stores."
+    examples:
+      - /home/user/documents
+      - /workspace/project-notes
+      - /share/team-readme
+  - category_id: data_sensitive
+    label: Sensitive business data
+    weight: 0.65
+    justification: "Confidential business records can create material impact when accessed, modified, or exfiltrated."
+    examples:
+      - /db/customer_records
+      - /exports/payroll
+      - /storage/pii
+  - category_id: identity_auth
+    label: Identity and authentication materials
+    weight: 0.80
+    justification: "Identity artifacts enable account takeover and privilege misuse across multiple systems."
+    examples:
+      - /auth/tokens
+      - /sso/session-store
+      - /iam/policies
+  - category_id: admin_surface
+    label: Administrative surfaces
+    weight: 0.90
+    justification: "Administrative interfaces can alter global configuration and operational posture."
+    examples:
+      - /admin
+      - /control-panel
+      - /ops/console
+  - category_id: secrets_material
+    label: Secrets and cryptographic material
+    weight: 1.00
+    justification: "Exposure of keys, secrets, or certificates can immediately compromise confidentiality and trust boundaries."
+    examples:
+      - /secrets/api-keys
+      - /vault/prod
+      - /pki/private
