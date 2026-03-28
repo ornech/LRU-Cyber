@@ -24,7 +24,7 @@ Forme :
 
 ```text
 Vector5D = (d1, d2, d3, d4, d5)
-````
+``` 
 
 ### 1.2. Invariants
 
@@ -95,7 +95,7 @@ Invalides :
 
 `MatchResult` décrit le résultat d'un rapprochement entre une trajectoire observée et un modèle de référence.
 
-Forme minimale :
+Forme :
 
 ```text
 MatchResult = (
@@ -103,7 +103,7 @@ MatchResult = (
   normalized_distance,
   match_score,
   matched_stage,
-  completion_probability
+  completion_probability  -- optionnel (None si non renseignée)
 )
 ```
 
@@ -111,9 +111,18 @@ MatchResult = (
 
 ```text
 raw_distance >= 0
+raw_distance est finie (ni NaN, ni ±inf)
+
 0 <= normalized_distance <= 1
+normalized_distance est finie (ni NaN, ni ±inf)
+
 0 <= match_score <= 1
+match_score est fini (ni NaN, ni ±inf)
+
 match_score = 1 - normalized_distance
+
+completion_probability, si renseignée, appartient à [0,1]
+completion_probability, si renseignée, est finie (ni NaN, ni ±inf)
 ```
 
 ### 2.3. Règle métier
@@ -130,10 +139,23 @@ Toute décision métier (`WATCH`, `CRITICAL`, etc.) doit être prise à partir d
 
 Un `MatchResult` doit être rejeté si :
 
+* `raw_distance` vaut `NaN` ;
+* `raw_distance` vaut `+inf` ou `-inf` ;
+
+* `normalized_distance` vaut `NaN` ;
+* `normalized_distance` vaut `+inf` ou `-inf` ;
 * `normalized_distance` sort de `[0,1]` ;
+
+* `match_score` vaut `NaN` ;
+* `match_score` vaut `+inf` ou `-inf` ;
 * `match_score` sort de `[0,1]` ;
+
 * `match_score != 1 - normalized_distance` ;
-* `raw_distance < 0` ;
+
+* `completion_probability` est renseignée mais vaut `NaN` ;
+* `completion_probability` est renseignée mais vaut `+inf` ou `-inf` ;
+* `completion_probability` est renseignée mais sort de `[0,1]` ;
+
 * `matched_stage` est incohérent avec la séquence évaluée.
 
 ### 2.5. Exemple
@@ -167,6 +189,10 @@ match_score = 0.60
 * cohérence `match_score = 1 - normalized_distance` ;
 * rejet d'une distance normalisée > 1 ;
 * rejet d'un score négatif ;
+* rejet de `NaN` ;
+* rejet de `±inf` ;
+* rejet de `completion_probability` non finie ;
+* rejet de `completion_probability` hors `[0,1]` ;
 * vérification qu'aucune politique d'alerte ne dépend de `raw_distance` seule.
 
 ---
