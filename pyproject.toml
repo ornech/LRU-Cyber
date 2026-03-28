@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cyber-vpt"
+version = "0.1.0"
+description = "Predictive detection of attack trajectories through 5D vector modeling"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2",
+    "pandas>=2.2",
+    "scipy>=1.15",
+    "scikit-learn>=1.6"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
