@@ -57,6 +57,9 @@ class Vector5D:
     d5 : float
         Rareté — écart de l'empreinte par rapport au parc habituel (∈ [0, 1]).
 
+    Les instances sont immuables : toute tentative de modification d'une
+    dimension après construction lève ``AttributeError``.
+
     Raises
     ------
     TypeError
@@ -64,6 +67,8 @@ class Vector5D:
         est fourni.
     ValueError
         Si une dimension est non finie (NaN, ±inf) ou hors de [0, 1].
+    AttributeError
+        Si l'on tente de modifier une dimension après construction.
     """
 
     __slots__ = ("d1", "d2", "d3", "d4", "d5")
@@ -80,11 +85,17 @@ class Vector5D:
         for name, value in zip(_DIMS, values):
             _validate_component(name, value)
 
-        self.d1 = float(d1)
-        self.d2 = float(d2)
-        self.d3 = float(d3)
-        self.d4 = float(d4)
-        self.d5 = float(d5)
+        object.__setattr__(self, "d1", float(d1))
+        object.__setattr__(self, "d2", float(d2))
+        object.__setattr__(self, "d3", float(d3))
+        object.__setattr__(self, "d4", float(d4))
+        object.__setattr__(self, "d5", float(d5))
+
+    def __setattr__(self, name: str, value: object) -> None:
+        raise AttributeError(
+            "Vector5D est immuable : les dimensions ne peuvent pas être modifiées "
+            "après construction."
+        )
 
     # ------------------------------------------------------------------
     # Alternative constructors

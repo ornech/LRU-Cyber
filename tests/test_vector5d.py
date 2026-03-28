@@ -215,3 +215,72 @@ class TestVector5DRejectsWrongDimensionCount:
     def test_constructor_too_many_args(self):
         with pytest.raises(TypeError):
             Vector5D(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)  # type: ignore[call-arg]
+
+
+# ---------------------------------------------------------------------------
+# Immutabilité
+# ---------------------------------------------------------------------------
+
+
+class TestVector5DIsImmutable:
+    """Vector5D doit être immuable après construction."""
+
+    def test_cannot_reassign_d1(self):
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        with pytest.raises(AttributeError):
+            v.d1 = 0.9  # type: ignore[misc]
+
+    def test_cannot_reassign_d3(self):
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        with pytest.raises(AttributeError):
+            v.d3 = 0.9  # type: ignore[misc]
+
+    def test_cannot_reassign_d5(self):
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        with pytest.raises(AttributeError):
+            v.d5 = 0.9  # type: ignore[misc]
+
+    def test_cannot_add_new_attribute(self):
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        with pytest.raises(AttributeError):
+            v.extra = "x"  # type: ignore[attr-defined]
+
+    def test_values_unchanged_after_construction(self):
+        """Les valeurs restent stables après construction."""
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        assert v.d1 == pytest.approx(0.1)
+        assert v.d2 == pytest.approx(0.2)
+        assert v.d3 == pytest.approx(0.3)
+        assert v.d4 == pytest.approx(0.4)
+        assert v.d5 == pytest.approx(0.5)
+
+
+# ---------------------------------------------------------------------------
+# Ordre stable des dimensions
+# ---------------------------------------------------------------------------
+
+
+class TestVector5DStableDimensionOrder:
+    """L'ordre des dimensions doit être stable et correspondre à d1…d5."""
+
+    def test_as_tuple_preserves_order(self):
+        """as_tuple doit retourner (d1, d2, d3, d4, d5) dans l'ordre."""
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        assert v.as_tuple() == (0.1, 0.2, 0.3, 0.4, 0.5)
+
+    def test_dimensions_accessible_by_name_in_order(self):
+        """Les attributs d1…d5 correspondent aux arguments positionnels."""
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        assert v.d1 == pytest.approx(0.1)
+        assert v.d2 == pytest.approx(0.2)
+        assert v.d3 == pytest.approx(0.3)
+        assert v.d4 == pytest.approx(0.4)
+        assert v.d5 == pytest.approx(0.5)
+
+    def test_distinct_values_each_position(self):
+        """Des valeurs distinctes sur chaque position permettent de vérifier
+        qu'il n'y a pas de permutation silencieuse."""
+        v = Vector5D(0.1, 0.2, 0.3, 0.4, 0.5)
+        dims = [v.d1, v.d2, v.d3, v.d4, v.d5]
+        assert dims == pytest.approx([0.1, 0.2, 0.3, 0.4, 0.5])
+        assert dims == list(v.as_tuple())
