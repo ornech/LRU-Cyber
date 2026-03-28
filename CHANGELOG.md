@@ -13,9 +13,10 @@
 
 ### Modifié
 
-- **C-002 — completion_probability** : champ rendu optionnel (`None` par défaut)
-  pour aligner contrat, implémentation et tests sur la sémantique "si renseignée"
-  définie dans `contracts.md`.
+- **C-002 — completion_probability** : champ optionnel dans `MatchResult`,
+  valeur par défaut `None` si non renseigné. La validation (appartenance à
+  `[0,1]`, finitude) n'est déclenchée que si la valeur est renseignée.
+  Contrat, implémentation et tests sont alignés sur cette règle.
 - Tests enrichis : rejet de `NaN` et `±inf` pour `raw_distance`,
   `normalized_distance` et `match_score` ; rejet de `completion_probability`
   invalide (NaN, ±inf, hors [0,1]) ; cohérence stricte `match_score = 1 -

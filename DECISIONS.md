@@ -28,11 +28,11 @@ et `match_score = 1 - normalized_distance`.
   sans assouplir le contrat métier.
 - **`matched_stage`** : restreint aux entiers non négatifs (`int`, booléens
   exclus) pour éviter les ambiguïtés de typage silencieux.
-- **`completion_probability`** : rendu optionnel (`None` par défaut).
-  La sémantique "si renseignée" du contrat C-002 est ainsi reflétée à la fois
-  dans le constructeur (paramètre optionnel) et dans les tests. La validation
-  n'est déclenchée que si la valeur est fournie (non `None`).
-  Documenté comme estimation heuristique, non preuve juridique d'intention
+- **`completion_probability`** : champ optionnel — valeur par défaut `None`
+  si non renseignée. La validation (appartenance à `[0,1]`, finitude) n'est
+  déclenchée que si la valeur est explicitement fournie (non `None`).
+  Ce champ représente une estimation heuristique de la fraction d'avancement
+  de l'attaque ; il ne constitue pas une preuve juridique d'intention
   malveillante.
 
 ### Alternatives rejetées
