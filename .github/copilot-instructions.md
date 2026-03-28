@@ -55,14 +55,14 @@ tests/                            # Unit tests  (EMPTY — to be implemented)
 
 All modules live under `src/`. Implement in this order to respect dependencies:
 
-| Layer                 | Classes                                                                                               | Responsibility                                                                           |
-| --------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **1 · Ingestion**     | `RawEvent`, `Fingerprint`, `FingerprintResolver`, `FingerprintIndex`, `BloomFilter`, `CountMinSketch` | Parse raw events; produce stable, hash-based fingerprints                                |
-| **2 · Vectorisation** | `ActionSemantics`, `Vector5D`, `Vectorizer`                                                           | Map any event to a point in `[0,1]^5`                                                    |
-| **3 · Trajectories**  | `Commit`, `Trajectory`, `TrajectoryStore`                                                             | Maintain ordered, hash-chained sequences per fingerprint (LRU two-tier: RAM <-> archive) |
-| **4 · Matching**      | `TechniqueModel`, `MitreRepository`, `DTWMatcher`, `MatchResult`                                      | DTW distance against MITRE ATT&CK sequences; output `normalized_distance` in `[0,1]`     |
-| **5 · Alerting**      | `AlertEngine`, `AlertLevel`                                                                           | Apply threshold policy to `MatchResult`; emit alerts                                     |
-| **6 · Archive**       | `ArchivedProfile`, `ArchiveManager`                                                                   | Compress inactive trajectories to `(mu, Sigma, n, first_seen, last_seen)` via PCA        |
+| Layer                 | Classes                                                                                               | Responsibility                                                                                           |
+| --------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **1 · Ingestion**     | `RawEvent`, `Fingerprint`, `FingerprintResolver`, `FingerprintIndex`, `BloomFilter`, `CountMinSketch` | Parse raw events; produce stable, hash-based fingerprints                                                |
+| **2 · Vectorisation** | `ActionSemantics`, `Vector5D`, `Vectorizer`                                                           | Map any event to a point in `[0,1]^5`                                                                    |
+| **3 · Trajectories**  | `Commit`, `Trajectory`, `TrajectoryStore`                                                             | Maintain ordered, hash-chained sequences per fingerprint (LRU two-tier: RAM <-> archive)                 |
+| **4 · Matching**      | `TechniqueModel`, `MitreRepository`, `DTWMatcher`, `MatchResult`                                      | DTW distance against MITRE ATT&CK sequences; output `normalized_distance` in `[0,1]`                     |
+| **5 · Alerting**      | `AlertEngine`, `AlertLevel`                                                                           | Apply threshold policy to `MatchResult`; emit alerts                                                     |
+| **6 · Archive**       | `ArchivedProfile`, `ArchiveManager`                                                                   | Summarize inactive trajectories as statistical archived profiles `(mu, Sigma, n, first_seen, last_seen)` |
 
 **Cross-cutting rule:** `DTWMatcher` is pure computation (no policy). `AlertEngine` is pure policy (no arithmetic). Never merge the two.
 
@@ -99,7 +99,7 @@ These must be preserved by every function, test, and data class:
 - **DTW over Euclidean distance:** handles "low and slow" attacks where timing varies significantly across replays.
 - **Bloom filter fast-path:** O(1) fingerprint existence check before accessing `FingerprintIndex`.
 - **Count-Min Sketch for `d5`:** gives a bounded, probabilistic estimate of fingerprint frequency without unbounded memory growth.
-- **LRU two-tier storage:** active trajectories in RAM at full resolution; inactive ones summarized into `ArchivedProfile` statistical objects, without PCA unless principal axes and explained variance are explicitly stored.
+- **LRU two-tier storage:** active trajectories in RAM at full resolution; inactive ones summarized into `ArchivedProfile` statistical objects `(mu, Sigma, n, first_seen, last_seen)`.
 - **`completion_probability` caveat:** this field in `MatchResult` is an _advance fraction estimate_, not a legal proof of attack intent. Document this wherever the field is used.
 
 ---

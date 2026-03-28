@@ -4,6 +4,15 @@
 
 ### Ajouté
 
+- **Issue #4 — d1 criticité (documentaire + données)** : ajout d'une table
+  versionnée de criticité dans
+  `references/criticality/criticality_weights.v1.yaml`.
+  Chaque entrée contient un poids borné `[0,1]`, une justification technique
+  explicite et des exemples de ressources.
+- Documentation associée ajoutée dans
+  `references/criticality/README.md` : structure de table, règles de
+  validation documentaire et règles de versionnement/mise à jour.
+
 - **C-003 — ArchivedProfile** : implémentation de la structure
   `ArchivedProfile` immuable (`src/cyber_vpt/archived_profile.py`).
   Valide au constructeur : `mu` de type `Vector5D`, `sigma` de forme `5x5`
