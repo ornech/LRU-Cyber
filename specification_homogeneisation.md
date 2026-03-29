@@ -28,47 +28,17 @@ $$d1 = \frac{W(resource)}{W_{max}}$$
 La table `W` doit être versionnée et justifiable.
 
 ### 2.2. `d2` — entropie
-Entrée : concaténation ordonnée de champs explicitement retenus par type
-d'événement ou de source.
+Entree : entropie de Shannon normalisee de `payload_bytes` avec la regle
+canonique `d2 = H(payload_bytes) / 8`.
 
-Règle :
+Resume operationnel : `payload_bytes` doit rester une concatenation ordonnee de
+champs explicitement autorises et observes en clair ; si ce contenu utile n'est
+pas observable en clair, `d2` est non calculable.
 
-$$d2 = \frac{H(payload\_bytes)}{8}$$
-
-où `payload_bytes` est calculé uniquement à partir des champs observés en clair
-et explicitement nommés ci-dessous.
-
-Règle ferme :
-- si le contenu utile n'est pas observable dans la source ou reste chiffré,
-	`d2` est **non calculable** ;
-- si un contenu applicatif est déjà observé en clair dans la source, `d2` est
-	calculé sur ce contenu observé uniquement ;
-- aucun décodage implicite, aucune décompression implicite et aucun
-	déchiffrement implicite ne sont autorisés.
-
-Tableau normatif :
-
-| Type d'événement ou de source          | Champs inclus                           | Champs exclus                                                                                                                                  | Condition de non-calculabilité                        |
-| :------------------------------------- | :-------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------- |
-| Requête HTTP applicative journalisée   | `cible`, `query_string`, `body`         | `methode`, tous les en-têtes, cookies, version HTTP, adresses, ports, timestamps, identifiants techniques, métadonnées de transport            | aucun champ inclus n'est observé en clair             |
-| Réponse HTTP applicative journalisée   | `body`                                  | status code, tous les en-têtes, cookies, version HTTP, adresses, ports, timestamps, identifiants techniques, métadonnées de transport          | `body` n'est pas observé en clair                     |
-| Événement DNS journalisé               | `query_name`                            | `record_type`, identifiant de transaction, flags, compteurs, adresses, ports, sérialisation binaire non exposée en clair                       | `query_name` n'est pas observé en clair               |
-| Événement de commande système ou shell | `command`, `arguments`                  | PID, UID, horodatage, code retour, hôte, métadonnées de session                                                                                | ni `command` ni `arguments` ne sont observés en clair |
-| Événement applicatif générique         | `message`, `body`, `content`, `payload` | level, logger, thread, timestamp, identifiants techniques, champs de contexte non textuels, tout champ non explicitement nommé dans ce tableau | aucun champ inclus n'est observé en clair             |
-| Événement de messagerie journalisé     | `subject`, `body`                       | enveloppe SMTP, routing headers, métadonnées de transport, pièces jointes non exposées en clair                                                | ni `subject` ni `body` ne sont observés en clair      |
-
-Ordre de concaténation :
-- Requête HTTP : `cible`, puis `query_string`, puis `body`.
-- Réponse HTTP : `body`.
-- DNS : `query_name`.
-- Commande système ou shell : `command`, puis `arguments`.
-- Événement applicatif générique : `message`, puis `body`, puis `content`, puis
-	`payload`.
-- Messagerie : `subject`, puis `body`.
-
-Le champ DNS `record_type` est explicitement exclu. Il reste un attribut
-structurel de qualification de requête et n'entre pas dans le contenu retenu
-pour `d2`.
+Le normatif detaille est centralise dans
+`references/d2_entropy/d2_entropy_spec.v1.md` et la table versionnee des regles
+par famille de source est centralisee dans
+`references/d2_entropy/payload_field_rules.v1.yaml`.
 
 ### 2.3. `d3` — dynamique temporelle
 Entrée : fréquence locale dérivée d'un `Δt` ou d'une fenêtre glissante.

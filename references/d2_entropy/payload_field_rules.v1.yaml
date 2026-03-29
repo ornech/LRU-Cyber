@@ -1,0 +1,148 @@
+table_id: d2_payload_field_rules
+version: v1
+status: accepted
+scope: CYBER-VPT d2 payload bytes composition rules
+owner: CYBER-VPT
+created_at: 2026-03-29
+review_policy:
+  cadence: update_on_semantic_change_only
+  versioning_rule: semantic_or_structural_change_requires_new_version
+  authority_order:
+    - DECISIONS.md
+    - references/d2_entropy/d2_entropy_spec.v1.md
+    - references/d2_entropy/payload_field_rules.v1.yaml
+
+rules:
+  - source_type: HTTP request
+    included_fields:
+      - cible
+      - query_string
+      - body
+    excluded_fields:
+      - methode
+      - all_headers
+      - cookies
+      - http_version
+      - source_address
+      - ports
+      - timestamps
+      - technical_identifiers
+      - transport_metadata
+    concatenation_order:
+      - cible
+      - query_string
+      - body
+    non_calculable_when: no included field is observable in cleartext
+    notes:
+      - only observable cleartext content is eligible for d2
+      - structural fields are excluded from payload_bytes
+    examples:
+      - app_http_request_log with cleartext query_string and body
+
+  - source_type: HTTP response
+    included_fields:
+      - body
+    excluded_fields:
+      - status_code
+      - all_headers
+      - cookies
+      - http_version
+      - source_address
+      - ports
+      - timestamps
+      - technical_identifiers
+      - transport_metadata
+    concatenation_order:
+      - body
+    non_calculable_when: body is not observable in cleartext
+    notes:
+      - only response body is retained as content payload
+      - structural response metadata is excluded
+    examples:
+      - app_http_response_log with cleartext body
+
+  - source_type: DNS
+    included_fields:
+      - query_name
+    excluded_fields:
+      - record_type
+      - transaction_id
+      - flags
+      - counters
+      - addresses
+      - ports
+      - binary_serialization_not_exposed_in_cleartext
+    concatenation_order:
+      - query_name
+    non_calculable_when: query_name is not observable in cleartext
+    notes:
+      - rule is intentionally closed on query_name
+      - record_type is a structural qualifier and remains excluded
+    examples:
+      - dns_query_log with cleartext query_name
+
+  - source_type: commande systeme ou shell
+    included_fields:
+      - command
+      - arguments
+    excluded_fields:
+      - pid
+      - uid
+      - timestamp
+      - return_code
+      - host
+      - session_metadata
+    concatenation_order:
+      - command
+      - arguments
+    non_calculable_when: neither command nor arguments is observable in cleartext
+    notes:
+      - command text and arguments are the only retained content fields
+      - execution metadata is excluded
+    examples:
+      - shell_audit_event with cleartext command and arguments
+
+  - source_type: evenement applicatif generique
+    included_fields:
+      - message
+      - body
+      - content
+      - payload
+    excluded_fields:
+      - level
+      - logger
+      - thread
+      - timestamp
+      - technical_identifiers
+      - non_text_context_fields
+      - any_field_not_explicitly_listed
+    concatenation_order:
+      - message
+      - body
+      - content
+      - payload
+    non_calculable_when: no included field is observable in cleartext
+    notes:
+      - family is closed to explicitly listed fields only
+      - any additional field requires explicit documentary update
+    examples:
+      - generic_app_log with cleartext message and payload
+
+  - source_type: messagerie
+    included_fields:
+      - subject
+      - body
+    excluded_fields:
+      - smtp_envelope
+      - routing_headers
+      - transport_metadata
+      - attachments_not_exposed_in_cleartext
+    concatenation_order:
+      - subject
+      - body
+    non_calculable_when: neither subject nor body is observable in cleartext
+    notes:
+      - message metadata remains structural for d2
+      - only cleartext subject/body are retained
+    examples:
+      - email_journal_event with cleartext subject and body
