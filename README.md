@@ -47,8 +47,15 @@ Chaque action est projetée dans un espace vectoriel $V_a = [d_1, d_2, d_3, d_4,
 ---
 
 ### 5. Système d'Alerte Prédictive
-Une alerte est générée si la distance entre la trajectoire utilisateur et une trajectoire MITRE est inférieure au seuil de tolérance :
-$$Distance(T_{user}, T_{atk}) < \epsilon$$
+Le matching calcule d'abord une distance normalisée entre la trajectoire utilisateur et
+une trajectoire MITRE de référence (via DTW), bornée dans `[0,1]`.
+
+Le score de correspondance est ensuite dérivé de cette distance :
+$$match\_score = 1 - normalized\_distance$$
+
+La politique d'alerte est appliquée séparément du calcul de distance/score, à partir de
+ce `match_score` et de seuils de décision explicites.
+
 L'alerte identifie précisément quelle étape de la chaîne d'attaque est actuellement mimée.
 
 ---

@@ -9,7 +9,10 @@
 3. Comparing live trajectories against MITRE ATT&CK reference models using DTW.
 4. Raising an alert when the convergence score exceeds a threshold — _before_ the final malicious step occurs.
 
-The project is currently in **specification phase**. `src/` and `tests/` are empty; all architecture is defined in `README.md`, `projet.plantuml`, `vecteurs.md`, `specification_homogeneisation.md`, `explication_convergence.md`, and `lexique.md`.
+The project is currently in an **early implementation phase** with domain contracts and
+core data structures already in place. Foundational architecture remains documented in
+`README.md`, `projet.plantuml`, `vecteurs.md`,
+`specification_homogeneisation.md`, `explication_convergence.md`, and `lexique.md`.
 
 ---
 
@@ -41,13 +44,22 @@ vecteurs.md                       # 5D vector dimension formulas
 specification_homogeneisation.md  # Symmetry and normalisation rules for all 5 dims
 explication_convergence.md        # DTW matching, scoring, and alert logic
 lexique.md                        # Domain glossary
-src/                              # Python source (EMPTY — to be implemented)
-tests/                            # Unit tests  (EMPTY — to be implemented)
+src/                              # Python source (domain contracts + base implementations)
+tests/                            # Unit tests (contracts for implemented baseline)
 .github/
   copilot-instructions.md         # This file
   pyproject.toml                  # Package metadata (cyber-vpt)
   workflows/copilot-setup-steps.yml
 ```
+
+Current implemented baseline includes:
+
+- `src/cyber_vpt/vector5d.py` with contract tests in `tests/test_vector5d.py`
+- `src/cyber_vpt/match_result.py` with contract tests in `tests/test_match_result.py`
+- `src/cyber_vpt/archived_profile.py` with contract tests in
+  `tests/test_archived_profile.py`
+- Versioned `d1` reference table in
+  `references/criticality/criticality_weights.v1.yaml`
 
 ---
 
@@ -117,6 +129,8 @@ These must be preserved by every function, test, and data class:
 ## Known open questions — do not silently invent values
 
 - `d3` sigmoid parameters (`k` slope, `f0` midpoint): not calibrated yet; add a `TODO` comment and document assumptions when implementing.
-- `W` criticality table for `d1`: referenced but not defined; create a versioned YAML/JSON fixture in `src/` or `tests/fixtures/`.
+- `W` criticality calibration for `d1`: a first versioned table exists in
+  `references/criticality/criticality_weights.v1.yaml`; update by introducing
+  a new versioned reference file when recalibration is required.
 - `d_max` for distance normalisation: derive empirically from a representative run or document the chosen constant with a justification comment.
 - `ArchiveManager.restore_or_split` semantics: undefined; do not implement until explicitly specified.

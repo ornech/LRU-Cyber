@@ -30,6 +30,15 @@
 
 ### Modifié
 
+- **Réalignement documentaire** : mise à jour de `README.md` et
+  `.github/copilot-instructions.md` pour refléter l'état réel du dépôt.
+  L'alerte n'est plus décrite comme `Distance(T_user, T_atk) < ε` mais comme
+  une politique séparée appliquée à un `match_score` dérivé d'une distance
+  normalisée. La documentation d'état de projet mentionne désormais les
+  implémentations déjà présentes (`Vector5D`, `MatchResult`,
+  `ArchivedProfile`) et leurs tests, ainsi que la table `d1` versionnée dans
+  `references/criticality/criticality_weights.v1.yaml`.
+
 - Export package : ajout de `ArchivedProfile` dans
   `src/cyber_vpt/__init__.py` (`__all__`).
 
