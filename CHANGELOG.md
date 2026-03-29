@@ -4,6 +4,15 @@
 
 ### Ajouté
 
+- **Issue #60 - d2 entropy (documentaire + donnees)** : ajout du dossier
+  `references/d2_entropy/` avec une specification versionnee
+  `d2_entropy_spec.v1.md` et une table versionnee
+  `payload_field_rules.v1.yaml`.
+- Centralisation du normatif detaille de `d2` dans
+  `references/d2_entropy/` et passage des documents racine `vecteurs.md` et
+  `specification_homogeneisation.md` a un role de synthese avec renvois
+  explicites.
+
 - **Issue #7 — d4 intensite (documentaire + donnees)** : ajout du dossier
   `references/d4_intensity/` avec une specification versionnee
   `d4_intensity_spec.v1.md`, une definition explicite de `ActionSemantics`
