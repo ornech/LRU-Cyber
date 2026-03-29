@@ -1,0 +1,73 @@
+table_id: d5_rarity_projection
+version: v1
+status: accepted
+scope: CYBER-VPT d5 rarity ordinal documentary projection
+owner: CYBER-VPT
+created_at: 2026-03-30
+
+review_policy:
+  cadence: update_on_semantic_change_only
+  versioning_rule: semantic_or_structural_change_requires_new_version
+  authority_order:
+    - DECISIONS.md
+    - references/d5_rarity/d5_rarity_spec.v1.md
+    - references/d5_rarity/rarity_projection.v1.yaml
+
+counting_universe:
+  mode: by_source_family_or_protocol
+  description: Rarity is evaluated within each source family or protocol scope.
+
+counting_granularity:
+  unit: observed_action_occurrence
+  description: One observed action occurrence equals one counting unit.
+
+never_seen_policy:
+  representation: scalar_continuum_maximum
+  anchor: 1.00
+  hidden_flag_allowed: false
+  notes:
+    - never_seen remains inside the same scalar continuum in [0,1]
+
+ordinal_classes:
+  - class_id: ubiquitous
+    label: Ubiquitous
+    description: Very frequent in the retained universe.
+  - class_id: common
+    label: Common
+    description: Regularly observed in the retained universe.
+  - class_id: occasional
+    label: Occasional
+    description: Observed intermittently in the retained universe.
+  - class_id: rare
+    label: Rare
+    description: Infrequent in the retained universe.
+  - class_id: never_seen
+    label: Never seen
+    description: Not yet observed in the retained universe.
+
+anchors:
+  ubiquitous: 0.00
+  common: 0.25
+  occasional: 0.50
+  rare: 0.75
+  never_seen: 1.00
+
+input_mitre_correspondence:
+  type: semantic_documentary_correspondence
+  rule: same_d5_rarity_vocabulary_and_class_table_for_input_and_mitre
+  notes:
+    - does_not_require_empirical_frequency_symmetry
+    - correspondence_is_documentary_not_runtime
+
+out_of_scope_v1:
+  - temporal_horizon_policy
+  - forgetting_or_aging_policy
+
+constraints:
+  - d5_scalar_range_is_0_to_1
+  - projection_is_ordinal_documentary_with_fixed_anchors
+  - no_runtime_estimator_keys
+  - no_count_min_sketch_keys
+  - no_dtw_logic_keys
+  - no_alert_policy_keys
+  - no_transverse_fingerprint_definition

@@ -300,3 +300,66 @@ Choix normatifs structurants de `v1` :
   sans surinterpretation artificielle.
 - Toute evolution normative ulterieure devra creer des fichiers `v2+`, sans
   reecriture silencieuse de `v1`.
+
+## D-007 — Referentiel versionne de d5 rarete documentaire (issue #8)
+
+**Date :** 2026-03-30
+**Statut :** acceptee
+
+### Contexte
+
+La dimension `d5` (rarete) etait engagee minimalement dans les documents
+racine, mais sans referentiel versionne autonome fermant explicitement :
+- l'univers de comptage,
+- la granularite,
+- le traitement normatif de `jamais vu`,
+- la projection documentaire canonique dans `[0,1]`,
+- la correspondance semantique input/MITRE,
+- les limites d'interpretation,
+- et les reports hors v1.
+
+L'issue #8 impose une fermeture strictement documentaire, sans implementation
+runtime, sans benchmark/calibration, sans tests d'execution, et sans
+redefinition transverse de `Fingerprint`.
+
+### Decision
+
+Adopter une reference versionnee dediee dans `references/d5_rarity/` :
+
+- `d5_rarity_spec.v1.md` : specification normative de `d5`.
+- `rarity_projection.v1.yaml` : table versionnee des classes ordinales,
+  ancres fixes et correspondance documentaire input/MITRE.
+- `README.md` : regles de perimetre et de versionnement de la reference `d5`.
+
+Arbitrages normatifs fermes pour `v1` :
+
+- univers de comptage : par famille de source ou protocole ;
+- granularite : occurrence d'action observee ;
+- `jamais vu` : valeur maximale du continuum scalaire `d5` dans `[0,1]`, sans
+  flag cache ;
+- projection canonique : ordinale, documentaire, bornee, avec ancres fixes ;
+- horizon temporel : explicitement hors v1 ;
+- oubli/vieillissement : explicitement hors v1 ;
+- limites d'interpretation : socle minimal + cas legitimes de renouvellement
+  d'empreinte ;
+- symetrie input/MITRE : semantique stricte avec table de correspondance
+  documentaire, sans supposer une symetrie empirique de frequence.
+
+### Alternatives rejetees
+
+- Introduire un estimateur runtime (y compris details CMS) : rejete
+  (hors perimetre).
+- Introduire une politique d'alerte ou de matching : rejete (hors perimetre).
+- Redefinir `Fingerprint` comme objet transverse dans l'issue #8 : rejete
+  (hors perimetre).
+- Fixer en v1 une politique de fenetre temporelle ou d'oubli/vieillissement :
+  rejete (report explicite hors v1).
+
+### Consequences
+
+- `d5` dispose d'un referentiel documentaire autonome, versionne et tracable
+  dans `references/d5_rarity/`.
+- `vecteurs.md` et `specification_homogeneisation.md` restent des documents de
+  synthese avec renvois explicites vers le normatif `d5`.
+- Toute evolution normative future de `d5` devra creer des fichiers `v2+`,
+  sans reecriture silencieuse de `v1`.

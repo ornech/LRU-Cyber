@@ -114,16 +114,12 @@ Le barème doit être décliné par protocole. Une lecture SQL et un `GET /healt
 
 ### 4.5. `d5` — rareté
 
-`d5` mesure l'écart entre l'empreinte observée et le comportement habituel du parc.
+`d5` mesure la rareté de l'empreinte observée, dans un scalaire borne `[0,1]`.
 
-Le calcul s'appuie sur une estimation de fréquence, par exemple via **Count-Min Sketch**, afin d'éviter un stockage exhaustif.
-
-Exemple de comportement attendu :
-
-- signature ubiquitaire : `d5 -> 0`
-- signature rare ou nouvelle : `d5 -> 1`
-
-`d5` agit comme amplificateur de signal faible. Une action modérément suspecte portée par une empreinte très rare doit compter davantage qu'un bruit de fond produit mille fois par jour.
+Le normatif detaille de `d5` (univers de comptage, granularite,
+projection ordinale a ancres fixes, traitement de `jamais vu`, limites
+d'interpretation, correspondance documentaire input/MITRE, et elements hors
+v1) est centralise dans `references/d5_rarity/d5_rarity_spec.v1.md`.
 
 ## 5. Contrat de construction
 

@@ -60,9 +60,14 @@ Exemple de barème générique :
 ### 2.5. `d5` — rareté
 Entrée : empreinte ou signature de porteur.
 
-Règle : score borné croissant avec la rareté observée.
+Regle de synthese : score borne croissant avec la rarete observee, avec la
+restriction que `jamais vu` reste dans le continuum scalaire `[0,1]`.
 
-Exemple de mise en œuvre : estimation de fréquence par **Count-Min Sketch**, puis projection dans `[0,1]`.
+Le normatif detaille `d5` est centralise dans
+`references/d5_rarity/d5_rarity_spec.v1.md`.
+La table documentaire versionnee des classes ordinales, ancres fixes et
+correspondance semantique input/MITRE est centralisee dans
+`references/d5_rarity/rarity_projection.v1.yaml`.
 
 ## 3. Protocole de vectorisation du référentiel MITRE
 Le référentiel MITRE ne doit pas être réduit à un seul vecteur idéal par technique tant qu'une technique comporte plusieurs phases.

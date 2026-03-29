@@ -4,6 +4,26 @@
 
 ### Ajouté
 
+- **Issue #8 — d5 rarete (documentaire + donnees)** : ajout du dossier
+  `references/d5_rarity/` avec une specification versionnee
+  `d5_rarity_spec.v1.md` et une table versionnee
+  `rarity_projection.v1.yaml`.
+- Le cadrage normatif retenu pour `d5` est trace : univers de comptage par
+  famille de source/protocole, granularite par occurrence d'action observee,
+  `jamais vu` fixe a l'ancre maximale du continuum scalaire `[0,1]`, et
+  projection ordinale documentaire a ancres fixes.
+- Les limites et exclusions sont explicites : `d5` seul n'est pas conclusif,
+  cas legitimes de renouvellement d'empreinte documentes, horizon temporel et
+  oubli/vieillissement reportes hors v1, absence de redefinition transverse de
+  `Fingerprint`.
+- Symetrie `d5` input/MITRE fixee au niveau semantique documentaire via table
+  de correspondance, sans exigence de symetrie empirique de frequence.
+
+- **Réalignement documentaire d5** : `vecteurs.md` et
+  `specification_homogeneisation.md` passent a un role de synthese pour `d5`
+  avec renvois explicites vers `references/d5_rarity/d5_rarity_spec.v1.md` et
+  `references/d5_rarity/rarity_projection.v1.yaml`.
+
 - **Issue #60 - d2 entropy (documentaire + donnees)** : ajout du dossier
   `references/d2_entropy/` avec une specification versionnee
   `d2_entropy_spec.v1.md` et une table versionnee
