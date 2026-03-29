@@ -19,9 +19,9 @@ Temporal horizon and forgetting/aging policy are explicitly out of `v1`.
 ## Files
 
 - `references/d5_rarity/d5_rarity_spec.v1.md`: normative documentary
-    specification for `d5`.
+  specification for `d5`.
 - `references/d5_rarity/rarity_projection.v1.yaml`: versioned documentary table
-    for ordinal classes, fixed anchors, and semantic input/MITRE correspondence.
+  for ordinal classes, fixed anchors, and semantic input/MITRE correspondence.
 
 ## Update Rules
 
