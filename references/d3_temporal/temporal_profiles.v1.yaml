@@ -1,0 +1,80 @@
+table_id: d3_temporal_profiles
+version: v1
+status: provisional
+scope: CYBER-VPT d3 temporal regimes
+owner: CYBER-VPT
+
+measurement_convention:
+  type: hybrid
+  definition: delta_t plus fingerprint-local sliding window
+  rationale:
+    - delta_t captures immediate temporal change
+    - local window stabilizes transient noise
+
+normalization:
+  model: bounded_sigmoid
+  canonical_form: d3 = 1 / (1 + exp(-k * (f - f0)))
+  output_range: [0.0, 1.0]
+  monotonicity: increasing_with_frequency
+  parameter_status: provisional_until_corpus_calibration
+  notes:
+    - Numeric parameters are not calibrated yet.
+
+profiles:
+  - profile_id: burst
+    label: Rafale
+    description: Very short inter-event intervals and concentrated activity.
+    expected_d3_trend: high_to_very_high
+    typical_dt_pattern: many_very_small_delta_t
+    window_sensitivity: high
+    examples:
+      - rapid repeated calls over a short period
+
+  - profile_id: scripted_regular
+    label: Execution scriptée régulière
+    description: Repeated cadence with low variance around a stable interval.
+    expected_d3_trend: medium_to_high
+    typical_dt_pattern: small_and_regular_delta_t
+    window_sensitivity: medium
+    examples:
+      - repetitive automation with stable timing
+
+  - profile_id: low_and_slow
+    label: Low-and-slow
+    description: Spaced events with persistent long-term progression.
+    expected_d3_trend: low_to_medium
+    typical_dt_pattern: large_delta_t_with_persistence
+    window_sensitivity: medium
+    examples:
+      - sparse but repeated progression over long duration
+
+  - profile_id: periodic_legitimate
+    label: Activité périodique légitime
+    description: Scheduled recurring activity with predictable timing.
+    expected_d3_trend: medium
+    typical_dt_pattern: regular_periodic_delta_t
+    window_sensitivity: medium
+    examples:
+      - maintenance or scheduled polling
+
+  - profile_id: sparse_background
+    label: Bruit de fond sporadique
+    description: Irregular and infrequent events without sustained acceleration.
+    expected_d3_trend: low
+    typical_dt_pattern: large_and_irregular_delta_t
+    window_sensitivity: low
+    examples:
+      - occasional benign background events
+
+review_policy:
+  cadence: periodic_review_required
+  versioning_rule: semantic_or_normative_change_requires_new_version
+  calibration_gate: corpus_observation_required_for_parameter_freeze
+
+constraints:
+  - profile_id_must_be_unique
+  - profile_table_is_documentary_not_runtime
+  - no_alert_thresholds_in_this_table
+  - no_mitre_or_dtw_logic_in_this_table
+  - cold_start_must_be_treated_as_insufficient_history
+  - profile_interpretation_must_remain_consistent_with_d3_temporal_spec_v1

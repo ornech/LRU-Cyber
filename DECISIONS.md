@@ -187,3 +187,55 @@ de source.
   « non calculable » au lieu d'un score construit sur une base implicite.
 - Toute extension future des champs autorisés devra être explicitement ajoutée à
   la table normative, et non introduite par analogie.
+
+## D-005 — Spécification versionnée de d3 dynamique temporelle (issue #6)
+
+**Date :** 2026-03-29
+**Statut :** acceptée
+
+### Contexte
+
+La dimension `d3` était décrite de manière générale mais sans artefact dédié
+versionné, ce qui laissait des ambiguïtés sur la convention de mesure, la
+normalisation, le traitement du `cold start` et la couverture des profils
+temporels.
+
+L'issue #6 impose un livrable strictement documentaire, sans implémentation
+runtime, sans logique de matching, sans logique MITRE et sans politique
+d'alerte.
+
+### Décision
+
+Adopter une référence versionnée dédiée dans `references/d3_temporal/` :
+
+- `d3_temporal_spec.v1.md` : spécification normative de `d3`.
+- `temporal_profiles.v1.yaml` : table versionnée des profils temporels couverts.
+- `README.md` : règles de périmètre et de versionnement de la référence `d3`.
+
+Les choix structurants de `v1` sont les suivants :
+
+- convention de mesure explicitement **hybride** : `Δt` inter-événements +
+  fenêtre locale sur la même empreinte ;
+- normalisation bornée dans `[0,1]` via une forme sigmoïde monotone documentée ;
+- couverture documentaire explicite des profils : rafale, exécution scriptée
+  régulière, low-and-slow, périodique légitime, sporadique ;
+- règle méthodologique ferme : le `cold start` est un état d'**historique
+  insuffisant** (`insufficient_history`) et ne doit jamais être interprété
+  comme une faible dynamique temporelle.
+
+### Alternatives rejetées
+
+- Assimiler le `cold start` à une valeur basse par défaut : rejeté.
+- Définir `d3` uniquement par timestamp absolu : rejeté.
+- Introduire des détails d'implémentation exécutable dans `src/` : rejeté
+  (hors périmètre).
+- Coupler `d3` à la logique DTW, MITRE, matching ou alerting : rejeté.
+
+### Conséquences
+
+- Le projet dispose d'un référentiel `d3` versionné, traçable et autonome.
+- Les paramètres numériques (`k`, `f0`, taille de fenêtre, etc.) restent
+  explicitement **provisoires** tant qu'aucune calibration corpus n'est
+  documentée.
+- Toute évolution normative ultérieure devra passer par une nouvelle version de
+  fichiers (`v2`, `v3`, ...), sans réécriture silencieuse de `v1`.

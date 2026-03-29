@@ -4,6 +4,18 @@
 
 ### Ajouté
 
+- **Issue #6 — d3 dynamique temporelle (documentaire + données)** : ajout du
+  dossier `references/d3_temporal/` avec une spécification versionnée
+  `d3_temporal_spec.v1.md` et une table de profils
+  `temporal_profiles.v1.yaml`.
+- La convention de mesure retenue pour `d3` est explicitement **hybride**
+  (`Δt` + fenêtre locale), avec normalisation bornée dans `[0,1]`.
+- Le cas `cold start` est figé comme état explicite d'**historique
+  insuffisant** (`insufficient_history`) et ne doit pas être interprété comme
+  une faible dynamique temporelle.
+- Les paramètres numériques de normalisation et de fenêtre sont documentés
+  comme **provisoires** tant qu'ils ne sont pas calibrés sur corpus observé.
+
 - **Issue #4 — d1 criticité (documentaire + données)** : ajout d'une table
   versionnée de criticité dans
   `references/criticality/criticality_weights.v1.yaml`.
